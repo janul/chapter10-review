@@ -403,44 +403,39 @@ available schema categories.
 
 ### OTTO vocabulary
 
-As specified in the JSON-LD 1.0 W3C specification, which can be found
-at https://www.w3.org/TR/json-ld/, JSON-LD is a lightweight syntax to serialize
-Linked Data in JSON. Since JSON-LD is 100% compatible with JSON, the large
-number of JSON parsers and libraries available today can be reused. Compared
-with XML, JSON parsers are simpler, and have less prone to security snafus.  
+JSON-LD 1.0 is a W3C specification, which can be found at https://www.w3.org/TR/json-ld/. It is a lightweight syntax to serialize
+Linked Data in JSON. Since JSON-LD is 100% compatible with JSON, you can
+use your existing JSON tools and libraries. Compared with XML, JSON is
+simpler, and parser developers are less prone to security snafus.
 
-One of the features that make JSON-LD a good choice for use in a federation
-API like OTTO is that a JSON-LD object may refer to a JSON object in a different
-domain.
+There were three main drivers behind the decision to use JSON-LD for OTTO.
 
-Another nice feature of JSON-LD is the ability of a Class to be a subclass
-of another class. OTTO uses schema from https://schema.org as a starting
-point. For example, in OTTO a participant is a subclass of schema.org
-Organization,  http://schema.org/Organization.  This was also useful for
-extension--the OTTO Core Vocabulary defines the building blocks which
-OTTO profiles can extend. For example, both SAML and OpenID have an Identity
-provider entity, which both extend OTTO Entity.
+1. You can refer to a JSON object in a different domain. Many of the
+objects are related. For example, entities are operated by a participant, a
+federation has participants, a registration authority operates federations.
+This capability can reduce some of the data duplication and filtering challenges
+in the current metadata aggregate approach.
+
+1. A JSON-LD class may be a subclass of another class, inheriting its properties.
+The OTTO Core Vocabulary defines building blocks, with which additional OTTO vocabularies can be built. For example SAML IDP and OpenID OP both use OTTO
+Entity as a subclass. Future vocabularies may address UMA, ACE, PKI, and other protocols yet to be invented, and hopefully will not have to re-invent--just
+supplement.
+
+1. OTTO uses schema from https://schema.org as a starting point. This means
+we started our vocabulary with a lot of functionality, and just had to
+define a minimal vocabulary to define federation specific stuff. For example,
+in OTTO a participant is a subclass of schema.org Organization,  http://schema.org/Organization.
 
 ![Figure 10- : Vocabulary Overview](./otto-schema-overview.jpg)
 
-Following is a summary of the OTTO vocabulary classes and subclasses.
-
-| Core Class              | OpenID Subclasses  | SAML Subclasses |
-|-------------------------|-------------------:|----------------:|
-| Registration Authority  |                    |                 |
-| Federation              |                    |                 |
-| Participant             |                    |                 |
-| Entity                  | OP, RP             | SAML Entity, IDP, SP, Attr. Authority|
-| Metadata                | Metadata Statement | SAML Metadata   |
-| Schema                  | User Claim, Scope  | User Attributes |
 
 For more information about OTTO, refer to the specifications:
 * OTTO Github: https://github.com/KantaraInitiative/wg-otto
-* https://gluu.co/otto-vocab
-* https://gluu.co/otto-openid
-* https://gluu.co/otto-saml
-* https://gluu.co/otto-api
-* Swagger Demo site (not guaranteed to be up): http://otto-test.gluu.org/swagger/
+* OTTO API's: https://gluu.co/otto-api
+* Core Vocabulary: https://gluu.co/otto-vocab
+* OpenID Vocabulary: https://gluu.co/otto-openid
+* SAML Vocabulary: https://gluu.co/otto-saml
+* Swagger Demo site (not guaranteed to be up!): http://otto-test.gluu.org/swagger/
 
 ## Jagger
 
