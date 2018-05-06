@@ -403,28 +403,26 @@ available schema categories.
 
 ### OTTO vocabulary
 
-JSON-LD 1.0 is a W3C specification, which can be found at https://www.w3.org/TR/json-ld/. It is a lightweight syntax to serialize
-Linked Data in JSON. Since JSON-LD is 100% compatible with JSON, you can
-use your existing JSON tools and libraries. Compared with XML, JSON is
-simpler, and parser developers are less prone to security snafus.
+JSON-LD 1.0 is a W3C specification, which can be found at https://www.w3.org/TR/json-ld/. It is a lightweight syntax to serialize Linked Data in JSON. Since JSON-LD is 100% compatible with JSON, you can use your existing JSON tools and libraries. JSON is better for security.
+Compared with XML, JSON is simpler, and parser developers are less prone to security snafus.
 
-There were three main drivers behind the decision to use JSON-LD for OTTO.
+Although there are many good reasons to use JSON-LD, it has three features important to OTTO:
 
-1. You can refer to a JSON object in a different domain. Many of the
+1. **Linking** You can refer to a JSON object in a different domain. Many of the
 objects are related. For example, entities are operated by a participant, a
 federation has participants, a registration authority operates federations.
 This capability can reduce some of the data duplication and filtering challenges
 in the current metadata aggregate approach.
 
-1. A JSON-LD class may be a subclass of another class, inheriting its properties.
+1. **Extensibility** A JSON-LD class may be a subclass of another class, inheriting its properties.
 The OTTO Core Vocabulary defines building blocks, with which additional OTTO vocabularies can be built. For example SAML IDP and OpenID OP both use OTTO
 Entity as a subclass. Future vocabularies may address UMA, ACE, PKI, and other protocols yet to be invented, and hopefully will not have to re-invent--just
 supplement.
 
-1. OTTO uses schema from https://schema.org as a starting point. This means
-we started our vocabulary with a lot of functionality, and just had to
-define a minimal vocabulary to define federation specific stuff. For example,
-in OTTO a participant is a subclass of schema.org Organization,  http://schema.org/Organization.
+1. **Re-Use** OTTO used schema from https://schema.org as a starting point. This means
+our vocabulary was almost compelte--OTTO defines some addditional vocabulary
+for federation specific stuff. For example, in OTTO a participant is a subclass of
+schema.org Organization,  http://schema.org/Organization.
 
 ![Figure 10- : Vocabulary Overview](./otto-schema-overview.jpg)
 
@@ -473,26 +471,8 @@ is a java platform for hosting a single federation. Features:
 * Ability to import existing data for users of the SWITCH resource registry tool.
 
 ![Figure 10- : screenshot](./FR2-screenshot.png)
-
 ## OTTO-Node / FIDES
 
-Still really just a project on Github, it's referenced here in the interest
-of fostering more adoption. The code was developed with funding from an identity
-pilot at the Department of Homeland Security Science and Technology group.
-https://github.com/GluuFederation/otto-node
+Still an early project, the code was partially developed during a pilot at the Department of Homeland Security Science and Technology group. The code can be found at: https://github.com/GluuFederation/otto-node
 
 ![Figure 10- : screenshot](./![Figure 10- : screenshot](./fides-federation.png))
-
-
-
-
-
-
-
-
-
-
-
-
-
-.
