@@ -6,8 +6,8 @@ For example, if your organization operates a website with valuable
 content, and someone you authenticated at another domain steals the
 content, what recourse do you have? If your organization operates
 an OpenID Provider, and a relying party website is hacked (potentially exposing
-your account holder's personal information) do you expect to be
-notified? And what rights do you have to update information at identity providers
+your account holder's personal information) do you expect to be notified? And
+what rights do you have to update information at identity providers
 or websites that you use? These related federated trust considerations are aptly
 described by Scott David, a legal identity scholar, as the "triangle of trust."
 
@@ -403,10 +403,14 @@ available schema categories.
 
 ### OTTO vocabulary
 
-JSON-LD 1.0 is a W3C specification, which can be found at https://www.w3.org/TR/json-ld/. It is a lightweight syntax to serialize Linked Data in JSON. Since JSON-LD is 100% compatible with JSON, you can use your existing JSON tools and libraries. JSON is better for security.
-Compared with XML, JSON is simpler, and parser developers are less prone to security snafus.
+JSON-LD 1.0 is a W3C specification, which can be found at
+https://www.w3.org/TR/json-ld/. It is a lightweight syntax to serialize Linked
+Data in JSON. Since JSON-LD is 100% compatible with JSON, you can use your
+existing JSON tools and libraries. JSON is better for security. Compared with
+XML, JSON is simpler, and parser developers are less prone to security snafus.
 
-Although there are many good reasons to use JSON-LD, it has three features important to OTTO:
+Although there are many good reasons to use JSON-LD, three features were
+important to OTTO:
 
 1. **Linking** You can refer to a JSON object in a different domain. Many of the
 objects are related. For example, entities are operated by a participant, a
@@ -414,8 +418,7 @@ federation has participants, a registration authority operates federations.
 This capability can reduce some of the data duplication and filtering challenges
 in the current metadata aggregate approach.
 
-1. **Extensibility** A JSON-LD class may be a subclass of another class, inheriting its properties.
-The OTTO Core Vocabulary defines building blocks, with which additional OTTO vocabularies can be built. For example SAML IDP and OpenID OP both use OTTO
+1. **Extensibility** A JSON-LD class may be a subclass of another class, inheriting its properties. The OTTO Core Vocabulary defines building blocks, with which additional OTTO vocabularies can be built. For example SAML IDP and OpenID OP both use OTTO
 Entity as a subclass. Future vocabularies may address UMA, ACE, PKI, and other protocols yet to be invented, and hopefully will not have to re-invent--just
 supplement.
 
@@ -426,6 +429,20 @@ schema.org Organization,  http://schema.org/Organization.
 
 ![Figure 10- : Vocabulary Overview](./otto-schema-overview.jpg)
 
+#### OTTO Core Vocabulary
+
+All core OTTO classes have an `@id` and `name` property. The `@id` is a globablly
+unique identifier--a primary key used for linking data. The issuer of the
+`@id` should either use a GUID algorithm or a hierarchical name space (such as
+a url). The `name` property is a human readable identifier.  Following is a
+summary of the information stored in each.
+
+* RA
+* participant
+* Federation
+* entity
+* metadata
+* schema
 
 For more information about OTTO, refer to the specifications:
 * OTTO Github: https://github.com/KantaraInitiative/wg-otto
@@ -471,6 +488,7 @@ is a java platform for hosting a single federation. Features:
 * Ability to import existing data for users of the SWITCH resource registry tool.
 
 ![Figure 10- : screenshot](./FR2-screenshot.png)
+
 ## OTTO-Node / FIDES
 
 Still an early project, the code was partially developed during a pilot at the Department of Homeland Security Science and Technology group. The code can be found at: https://github.com/GluuFederation/otto-node
