@@ -229,31 +229,21 @@ inter-federation, if one federation imports all the entities of another
 federation.
 
 For many SAML federations, publication of metadata is an automated process that
-happens every five minutes or so. As the signed SAML federation metadata 4
-aggregate is just one big file, it can also be distributed to multiple data centers, enabling more robust deployments.
-
-In terms of operations, the SAML federation metadata can be published as a flat
-file. This makes global distribution of the document easier, as the federation
-or registration authority needs no runtime infrastructure other then a web
-server.
+happens every five minutes or so. In terms of operations, the SAML federation metadata can be published as a flat file. This makes global distribution of the document easier, as the federation or registration authority needs no runtime infrastructure other then a web server. The metadata aggregate can just be
+copied to multiple data centers, enabling more robust deployments.
 
 In SAML, both IDP and SP entities are treated similarly in the metadata. Both
-are required to have a stable entityID, which is like a primary key, and must
-be unique in the metadata. It's a common convention to use the URL of the
-entity's metadata as the value for the entityID because it's collision
-resistant. As mentioned above, the metadata published by the entity may or may
+are required to have a stable entityID, which is like a primary key--the
+entityID must be unique in the metadata. It's a common convention to use the URL of the entity's metadata as the value for the entityID (a url is collision
+resistant.) The other common convention is to use a URN as the value for the entityID. As mentioned above, the metadata published by the entity may or may
 not be the same as the metadata published for that entity by the federation,
-as the federation may add extra information about the entity in its version.
-The other common convention is to use a URN as the value for the entityID.
+as the federation may add extra information about the entity to its aggregate.
 
-Another drawback of the metadata aggregate is that it is hard to search.
-It's very flat, so inevitably, you need to iterate through all the entries
-(which can be very slow if you're parsing the XML at runtime). The final drawback
-is that the approach makes inter-federation difficult. A large file can get even
-bigger if you are including entities from another federation. And the process of
-copying files, and perhaps transforming them to meet your federation's metadata
-conventions can be onerous. For these reasons, this approach to SAML federation
-is limited to a few thousand entities.
+There are a few drawbacks of the metadata aggregate approach:
+ * The metadata aggregate is that it is hard to search. It's very flat, so inevitably, you need to iterate through all the entries (which can be very slow if you're parsing the XML at runtime).
+ * Inter-federation does not scale well. A large file can get even bigger if you are including entities from another federation. The process of copying files,
+ and perhaps transforming them to meet your federation's metadata conventions can be onerous.
+ * As a rule of thumb, size is limited to a few thousand entities.
 
 ## OpenID federations
 
