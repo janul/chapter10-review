@@ -219,7 +219,7 @@ participant, and the federation.
 
 SAML metadata allows for the description of multiple entities. A SAML
 federation metadata aggregate is a big xml file with all the entities
-for all the participants. The federation signs this metadata with its
+for all the participants. The federation signs this xml file with its
 private signing key, and publishes it.
 
 A metadata aggregate can get pretty big. Each entity publishes its public
@@ -229,9 +229,8 @@ inter-federation, if one federation imports all the entities of another
 federation.
 
 For many SAML federations, publication of metadata is an automated process that
-happens every five minutes or so. As the signed SAML federation metadata is
-just one big file, it can also be distributed to multiple data centers,
-enabling more robust deployments.
+happens every five minutes or so. As the signed SAML federation metadata 4
+aggregate is just one big file, it can also be distributed to multiple data centers, enabling more robust deployments.
 
 In terms of operations, the SAML federation metadata can be published as a flat
 file. This makes global distribution of the document easier, as the federation
@@ -258,7 +257,7 @@ is limited to a few thousand entities.
 
 ## OpenID federations
 
-OpenID presents a real challenge for federation. It has to do with how
+OpenID presents a real challenge for federation. It starts with how
 entities are named. In SAML, both IDP's and SP's have an entityID, which is a
 convenient way to reference them in a federation's metadata. In OpenID Connect,
 it's a requirement that the OpenID Provider publishes it's metadata (although
@@ -268,52 +267,39 @@ uniquely identify an OP in a federation.
 
 However, what is the entityID for an OpenID RP? During OpenID dynamic client
 registration, the OP issues a client_id. So the same client will have a
-different client_id at each OP. One could argue that the redirect_uri is a
+different client_id at each OP. One could argue that the `redirect_uri` is a
 reasonable way to identify a client. However, you need to take into account
-that redirect_uri, may be multi-value, and the RP may update it, so it lacks
-stability. In OpenID Connect it would impossible to require an RP to publish
-its metadata. SAML only really addresses server side web applications. But
-OpenID supports mobile clients, and Javascript clients that only exist as
-code in the person's browser.
+that `redirect_uri`, may be multi-value, and the RP may update it, so it's not
+a great primary key. In OpenID Connect it would impossible to require an RP to publish its metadata--OpenID supports mobile clients, and Javascript clients
+that only exist as code in the person's browser. SAML doesn't have this problem because it was designed to solve trust with server-side web applications
+(excepting the ECP profile of SAML, which is esoteric.)
 
-These limitations have forced a new design in the OpenID Connect federation
-specification, that does away with the idea of a federation aggregate, and
-replaces it with a more dynamic trust model. The spec is still a draft at the
-time of this book's publication, and lacks any adoption in existing federations.
-Also there are few if any OpenID Providers that implement it. But it's worth
-reviewing the proposed solution.
+These changes have required new ideas for the OpenID Connect federation
+specification, which does away with the idea of a federation aggregate, and
+replaces it with a more dynamic trust model.
 
-One of the central ideas is to introduce a stable signing key for the OP, which
-would be published on the OpenID Provider discovery page. This would enable
-the publication of a signed version of the OpenID discovery document. The
-key could be stored by the client, and thus would provide additional trust
-over TLS/SSL (after the key is retrieved). The specification makes no provision
-for what to do if the key needs to be rotated. You'd have to re-download it
-from the OP. But if an attacker has compromised the OP, when would be a good
-time to do that? Without the metadata aggregate, how would you know if the
-hacker or the organization re-published the signing key? Those considerations
-aside, the introduction of the signing key addresses another challenge for
-OpenID federation--the fact that it's recommended that the keys used to sign
-and encrypt identity assertions are rotated every two days according to current
-best practices.
+The OpenID Provider keys used to sign and encrypt assertions are rotated every
+two days according to current best practices. That's a lot--SAML keys are
+usually rotated every few months, or every year. One of the innovations of
+OpenID federation is to introduce a stable signing key for the OP, the
+location of which is published on the OpenID Provider discovery page.
+The public signing keys are stored by the client, and provide additional trust
+over TLS/SSL (after the key is retrieved). The  signing key is used to publish
+a verifiable OpenID discovery document.
+
+The specification makes no provision for what to do if the key needs to be rotated. You'd have to re-download it from the OP. But if an attacker has compromised the OP, when would be a good time to do that? Without the metadata aggregate, how would you know if the hacker or the organization re-published the signing key?
 
 The other innovation introduced by the OpenID Connect federation spec is the
-idea of metadata_statements, which is a kind of OAuth software statement, issued
-by the federation, which can be used during dynamic client registration at an
-OP. The administrative mechanics of how metadata_statements are created are
-somewhat obtuse, but in theory, it could work. Remember, an OAuth software
-statement is not what it sounds like--it's actually a JSON document used
-by the client at registration like a registration token. The metadata statement
-would be created by the developer, and signed, then passed to the organization
-and signed, and then passed to the federation and signed. In practice, it's
-way too complicated, but perhaps the right tooling will evolve over time
-to make it easier, if in fact this version of OpenID federation ever becomes
-a reality.
+idea of metadata_statements, a kind of OAuth software statement, issued
+by the federation. The technical mechanics of how metadata_statements
+are created are somewhat complicated--it involves successive cryptographic
+operations. Remember, an OAuth software statement is not what it sounds like--it's actually a JSON document used by the client at registration like a registration token. The metadata statement would be created by the developer, and signed, then passed to the organization and signed, and then passed to the federation and signed. In practice, it's a little complex, but perhaps with adoption of this
+standard, the right tooling will evolve over time to make it easier.
 
-Whether or not it gains adoption, the OpenID federation spec has proposed a new
-more scalable dynamic trust model that could potentially add trust over SSL/TLS,
-although perhaps its more a piece of the puzzle then the total solution which
-will evolve over time.
+The OpenID Connect federation specification is still a draft at the time of this book's publication. It lacks any adoption in existing federations. Also the
+features specified are implemented by few OpenID Providers. But whether or not
+it gains adoption, the OpenID federation spec has proposed a more scalable
+dynamic trust model that does add trust over SSL/TLS, and moves forward the discussion for the design of the next generation federation stack.
 
 ## OTTO Federation
 
@@ -357,9 +343,9 @@ trust models will evolve, and that it can be extended to meet those new
 requirements by supporting additional standard or even custom (industry
 specific) vocabularies.
 
-### OTTO API's
+### OTTO API
 
-OTTO API's are hosted by the registration authority on behalf of a federation.
+The registration authority hosts the OTTO API, which consists of a number of service endpoints.
 
 * *Configuration endpoint* : Returns a json document describing the federation
 services of the registration authority--basically the URLs of all the endpoints
@@ -431,20 +417,46 @@ schema.org Organization,  http://schema.org/Organization.
 
 #### OTTO Core Vocabulary
 
-All core OTTO classes have an `@id` and `name` property. The `@id` is a globablly
+All core OTTO classes have an `@id` and `name` property. The `@id` is a globally
 unique identifier--a primary key used for linking data. The issuer of the
 `@id` should either use a GUID algorithm or a hierarchical name space (such as
 a url). The `name` property is a human readable identifier.  Following is a
 summary of the information stored in each.
 
-* RA
-* participant
-* Federation
-* entity
-* metadata
-* schema
+* **RA** - Subclass of schema.org/Organization. Contains the OTTO
+  endpoint URI's (e.g. federation_endpoint, participant_endpoint). The
+  `registers` property specifies the hosted federations.
+* **Participant** - Subclass of schema.org/Organization. Entities are linked by the `operates` property. Federations are linked by the `memberOf` property.
+Participant contact information can also be published here.
+* **Entity** - Subclass of schema.org/Thing.  A technical service of a participant.
+The `operates` property indicates the resource. The `operatedBy` and  
+`federatedBy` properties specify the organization and federation links. The
+`supports` property can be used to describe schema requirements. The `category`
+property can be used by the federation to group Entities to faciliate trust
+management (e.g. R&S websites).
+* **Federation** - Subclass of schema.org/Organization. The `member` and
+ `federates` property links participants and entities respectively. The
+ `metadata` property specifies the federation's public keys, certificates
+ and other cryptographic information to enable verification of federation
+ assertions, and encrypted communication. The `sponsor` property specifies
+ the Organization responsible for governance. Federation contact information
+ and legal agreements can be listed. The federation can use the `supports`
+ property to publish schema standards, like user claim `identifi`ers (e.g.
+ givenName or first_name?).
+* **Metadata** - Subclass of schema.org/Thing. This class specifies its
+`metadataFormat`, `expiration` and `category` (e.g. OpenID or SAML).
+OTTO extension vocabularies (like OpenID and SAML) subclass metadata,
+adding the necessary details for their protocols.
+* **Schema** - Subclass of schema.org/Thing. Also uses the `category`
+property to group schema (e.g. "user_claims", "scope"). The `required`
+boolean can be used by an Entity, e.g. an SP might require the
+email address attribute. The `sameAs` property can be used to
+link Schema to eliminate overlap.
 
-For more information about OTTO, refer to the specifications:
+### OTTO Next
+
+OTTO is still under development at the Kantara Initiative. You can read the
+draft specifications, meeting minutes, and visit the test site:
 * OTTO Github: https://github.com/KantaraInitiative/wg-otto
 * OTTO API's: https://gluu.co/otto-api
 * Core Vocabulary: https://gluu.co/otto-vocab
@@ -456,13 +468,9 @@ For more information about OTTO, refer to the specifications:
 
 Developed by HEAnet to manage the Edugate multiparty SAML federation.
 in Ireland, Jagger is an easy to deploy and operate federation management
-platform that provides a website
-for participant administrators to join and update a federation, and for
-federation administrators to approve and publish SAML metadata. One of the
-nice features is that it supports the management of multiple federations, making
-it an excellent choice for a registration authority. The following figures
-show some of the screen shots from Jagger's website, which you can find at
-https://jagger.heanet.com
+platform that provides a website for participant administrators to join and
+update a federation, and for federation administrators to approve and publish
+SAML metadata. One of the nice features is that it supports the management of multiple federations, making it an excellent choice for a registration authority. The following figures show some of the screen shots from Jagger's website, which you can find at https://jagger.heanet.com
 
 ![Figure 10- : screenshot](./jagger-idp-list.png)
 
@@ -471,26 +479,42 @@ https://jagger.heanet.com
 Developed by the Australian higher education federation, Federation Registration
 is a java platform for hosting a single federation. Features:
 
-* A focus on Organisations as the key building block for the federation
-* Allows for Organisations to be service providers only
+* A focus on organizations as the key building block for the federation
+* Allows for organizations to be service providers only
 * A personalised dashboard view of the federation for all users
 * A highly refined, multi-browser, HTML5 compliant user interface
-* The user interface is fully themeable to suit the look and feel of your organisation
+* The user interface is fully themeable to suit the look and feel of your organization
 * Multilingual capable out of the box
 * Management for all aspects of SAML 2 compliant Identity and Service Providers
 * SAML 2.x compliant metadata generation
 * Additional assistance for Shibboleth IDP and SP administrators including automated Attribute Filter generation
-* Public registration for Organisations, Identity Providers and Service Providers that are new to the federation
+* Public registration for organizations, Identity Providers and Service Providers that are new to the federation
 * A fully customisable workflow engine to handle registrations and other critical federation changes
 * Compliance reporting to gain insight to various areas of your federation
 * A hand crafted model of the entire SAML 2 metadata specification for use in automated object relational mapping
 * Federation integrated, automatically provisioned user accounts with fine grained access control
-* Ability to import existing data for users of the SWITCH resource registry tool.
 
 ![Figure 10- : screenshot](./FR2-screenshot.png)
 
-## OTTO-Node / FIDES
+## OTTO-Node / Fides
 
-Still an early project, the code was partially developed during a pilot at the Department of Homeland Security Science and Technology group. The code can be found at: https://github.com/GluuFederation/otto-node
+Still an early project, this code was developed as part of a pilot for the Department of Homeland Security Science and Technology group. Fides is a
+web application that enables a person to register, then register an
+organization, and apply to become a member of the federation. It includes
+enrollment of an OpenID Provider, using the discovery features of OpenID
+Connect. A federation administrator manually approves membership applications.
+
+This project included support for creation of "badge assertions", which
+is a JSON-LD data structure defined in the Open Badges 2.0 specification,
+which can be found at https://gluu.co/open-badges-2-0. In our pilot, we were
+using badges to convey professional training and certifications that were
+specific to the emergency responder community. The fides federation admin can
+authorize an organization to issue certain types of badges.
+
+Fides also calls the OTTO API's--for example when a federation admin approves
+a new participant, Fides calls the OTTO federation endpoint to make the link.
+
+Fides and OTTO Node code can be found in Gluu's github repository: https://github.com/GluuFederation/otto-node
+https://github.com/GluuFederation/erasmus/tree/master/FIDES
 
 ![Figure 10- : screenshot](./![Figure 10- : screenshot](./fides-federation.png))
