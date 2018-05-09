@@ -1,5 +1,9 @@
 # Multiparty Federation
 
+"Information security is a fundamentally cooperative endeavor, one in
+which responsibility and authority are distributed across a wide array
+of actors." Ashwin J. Mathew
+
 Federated identity protocols like SAML and OpenID Connect enable us to
 authenticate people in other domains.  But trust issues quickly surface.
 For example, if your organization operates a website with valuable
@@ -90,7 +94,7 @@ higher education network enables reciprocal WiFi across participating
 campuses. Higher education was also an early adopter of SAML federations.
 In the U.S., InCommon (https://incommon.org) has approximately 1000 members:
 700 universities and 300 web sites. InCommon also has an interfederation
-agreement with Edugain. Government, defense, pharmaceutical
+agreement with eduGAIN. Government, defense, pharmaceutical
 and automotive industries also have created supply chain SAML federations.
 
 ![Figure 10-2 - Federation and Interfederation trust](./hub_and_spoke_trust.png)
@@ -199,7 +203,7 @@ multi-party federations also use technology to improve security.
 The primary trust model used on the Internet today is SSL/TLS. We drill it into
 people's heads: make sure the little green padlock icon is green! Browsers make
 it really confusing for people to navigate to an https websites where the SSL
-certificate is invalid. This trust model relies on the idea that the only the
+certificate is invalid. This trust model relies on the idea that the only
 organization that controls a domain can get a certificate for that domain from
 a well known certification authority--one that has its root certificate
 installed in the browser. In general, this trust model works pretty well, but
@@ -218,8 +222,8 @@ participant, and the federation.
 ## SAML federations via metadata aggregate
 
 SAML metadata allows for the description of multiple entities. A SAML
-federation metadata aggregate is a big xml file with all the entities
-for all the participants. The federation signs this xml file with its
+federation metadata aggregate is a big  file with all the entities
+for all the participants. The federation signs this XML file with its
 private signing key, and publishes it.
 
 A metadata aggregate can get pretty big. Each entity publishes its public
@@ -301,13 +305,9 @@ current federations, and only one very early software implementation of the
 API's.
 
 OTTO addresses some of the weaknesses of existing SAML federations. The OTTO
-API's standardize operation by the registration authority. How does a participant
-join a federation? How to register or update an entity? How to leave a federation?
-OTTO API's provide a standard way to do these things. In SAML, federation operators
-either wrote their own operational software, or used open source software to manage
-federation data. Some federations offer participants no automated interface--registration
-and updates happen via a manual process. If federations become more common,
-consistency would offer more efficiency to participants and operators alike.
+API's standardize operation by the registration authority. How does a participant join a federation? How to register or update an entity? How to leave a federation?
+
+OTTO API's provide a standard way to do these things. In SAML, federation operators either wrote their own operational software, or used open source software to manage federation data. Some federations offer participants no automated interface--registration and updates happen via a manual process. If federations become more common, consistency would offer more efficiency to participants and operators alike.
 
 OTTO APIs provide a query mechanism to obtain information from the federation.
 While this comes at additional operational complexity--the federation operator
@@ -399,7 +399,7 @@ Entity as a subclass. Future vocabularies may address UMA, ACE, PKI, and other p
 supplement.
 
 1. **Re-Use** OTTO used schema from https://schema.org as a starting point. This means
-our vocabulary was almost compelte--OTTO defines some addditional vocabulary
+our vocabulary was almost complete--OTTO defines some additional vocabulary
 for federation specific stuff. For example, in OTTO a participant is a subclass of
 schema.org Organization,  http://schema.org/Organization.
 
@@ -488,8 +488,7 @@ is a java platform for hosting a single federation. Features:
 
 ## OTTO-Node / Fides
 
-Still an early project, this code was developed as part of a pilot for the Department of Homeland Security Science and Technology group. Fides is a
-web application that enables a person to register, then register an
+Fides is a web application that enables a person to register, then register an
 organization, and apply to become a member of the federation. It includes
 enrollment of an OpenID Provider, using the discovery features of OpenID
 Connect. A federation administrator manually approves membership applications.
@@ -504,7 +503,7 @@ authorize an organization to issue certain types of badges.
 Fides also calls the OTTO API's--for example when a federation admin approves
 a new participant, Fides calls the OTTO federation endpoint to make the link.
 
-Fides and OTTO Node code can be found in Gluu's github repository: https://github.com/GluuFederation/otto-node
+This software, a part of the ERASMUS project, has been funded in part by the United States Department of Homeland Security's Science and Technology Directorate. The content of this book does not necessarily reflect the position or the policy of the U.S. Government and no official endorsement should be inferred. All the code is transparent and free open source. Fides and OTTO Node code can be found in Gluu's github repository: https://github.com/GluuFederation/otto-node
 https://github.com/GluuFederation/erasmus/tree/master/FIDES
 
 ![Figure 10- : screenshot](./![Figure 10- : screenshot](./fides-federation.png))
