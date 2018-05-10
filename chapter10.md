@@ -1,19 +1,20 @@
 # Multiparty Federation
 
-"Information security is a fundamentally cooperative endeavor, one in
+* "Information security is a fundamentally cooperative endeavor, one in
 which responsibility and authority are distributed across a wide array
-of actors." Ashwin J. Mathew
+of actors." - Ashwin J. Mathew
 
 Federated identity protocols like SAML and OpenID Connect enable us to
 authenticate people in other domains.  But trust issues quickly surface.
 For example, if your organization operates a website with valuable
 content, and someone you authenticated at another domain steals the
 content, what recourse do you have? If your organization operates
-an OpenID Provider, and a relying party website is hacked (potentially exposing
-your account holder's personal information) do you expect to be notified? And
-what rights do you have to update information at identity providers
-or websites that you use? These related federated trust considerations are aptly
-described by Scott David, a legal identity scholar, as the "triangle of trust."
+an OpenID Provider (OP), and a relying party website (RP) is hacked, potentially
+exposing your account holder's personal information, do you expect to be
+notified? And what rights do you have to update your personal information at
+identity providers or websites that you use? These related federated trust
+considerations are aptly described by Scott David, a legal identity scholar,
+as the "triangle of trust."
 
 ![Figure 10 - Triangle of Trust](./assurance_protection_control.png)
 
@@ -24,21 +25,26 @@ Assurance" of an authentication, you are less likely to hear about the
 "Level of Protection" or "Level of Control". But these trust considerations
 are equally important.
 
-Let's summarize for each vertex:
+Let's summarize for each vertex (using OpenID jargon... substitute IDP and SP
+if you prefer):
 
-* Level of Assurance (LOA): The RP (website) needs assurance from the OP.  Is the
+* Level of Assurance (LOA): The RP needs assurance from the OP.  Is the
 person who is the subject of the assertion really who they say they are? How
-well did you identity proof this person? Did you check a state issued ID?
-Did you verify with the issuer that the ID was valid? How well did you
-authenticate the person? And how secure are your account recovery procedures?
-The OP provides assurance, and is some cases liability protection, to the RP.
-The assertion is only as good as the identity management and security practices
-behind it.  Note, identity need not be asserted for the necessary assurance
-to be met. Sometimes the RP only cares "is the person really *what* they say
-they are?". In the case of eduRoam, what the RP wants to know is "are we
-assured this person will comply with our network rules." In the case of
-federated access to licensed resources (e.g. on-line journals) it's "is this
-someone whose bill you will paid?".
+well did you identity proof this person? Did you in-person inspect a state
+issued ID? Did you verify with the issuer that the ID was valid? How well did you
+authenticate the person (password, OTP, biometric)? And how secure are your account recovery procedures? The OP provides assurance, and in some cases,  liability
+protection to the RP. The assertion is only as good as the identity management
+and security practices behind it.  Identity need not be asserted for the
+necessary assurance to be met. Sometimes the RP only cares "is the person
+really *what* they say they are?". In the case of wifi federation, what the
+RP wants to know is "are we assured this person will comply with our network
+rules." In the case of federated access to licensed resources (e.g. on-line
+journals) it's "is this someone whose bill will paid?". LOA is closely
+associated with old NIST 800-63 levels one to four. The current version of
+800-63 is updated to reflect a more nuanced view of the vectors of risk.
+800-63C contains NIST's digital identity guidelines for federation and
+assertions, and outlines many of the technical considerations for federation
+operators.
 
 * Level of protection (LOP): The OP wants the website to protect the data.
 Most RP's will write data to their database. Using
@@ -47,7 +53,8 @@ but it is common for RP's to create a local account for each person to track
 their history and preferences. Whether or not the person approved the release
 of information explicitly or implicitly to the RP, most OP's expect a certain
 amount of diligence with regard to the handling of shared PII. The RP should
-adopt best practices for data security.
+adopt best practices for data security, and the extent to which it does is it's
+LOP.
 
 * Level of control (LOC): The person wants to update, remove or otherwise direct
 the use of their data. Today people are demanding control of their data as a
@@ -73,8 +80,7 @@ types of authentication, the procedure for breach notifications, and
 obligations to update or remove a person's information upon their
 request. However, in a large ecosystem with many companies, requiring
 each pair of organizations to negotiate a bilateral agreement is not
-efficient. Each organization would need n-1 agreements, where n is the
-number of ecosystem participants.
+efficient. In fact, it should be the anti-pattern.
 
 A better approach is to define one standard contract that level sets
 assurance, protection and control within the community. If each
