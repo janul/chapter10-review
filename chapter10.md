@@ -379,9 +379,9 @@ this book's publication. Software implementations are experimental.
 OTTO is a set of standards under development at the Kantara Initiative. OTTO
 stands for the "Open Trust Taxonomy for federation Operators".  It is a set
 of APIs for federation management, and an extensible JSON-LD vocabulary to
-model federation data. Like the OpenID federation spec, it has no adoption by
-current federations, and only one very early software implementation of the
-API's.
+model federation data. Like the OpenID federation spec, it is waiting for
+adoption above and beyond significant interest in communities with experience
+in this domain.
 
 OTTO addresses some of the weaknesses of existing SAML federations. The OTTO
 API's standardize operation by the registration authority. How does a
@@ -554,7 +554,7 @@ SAML metadata. One of the nice features is that it supports the management of mu
 ## Federation Registry
 
 Developed by the Australian higher education federation, Federation Registration
-is a java platform for hosting a single federation. Features:
+is a Java platform for hosting a single federation. Features include:
 
 * A focus on organizations as the key building block for the federation
 * Allows for organizations to be service providers only
