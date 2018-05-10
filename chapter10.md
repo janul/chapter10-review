@@ -33,7 +33,12 @@ Did you verify with the issuer that the ID was valid? How well did you
 authenticate the person? And how secure are your account recovery procedures?
 The OP provides assurance, and is some cases liability protection, to the RP.
 The assertion is only as good as the identity management and security practices
-behind it.  
+behind it.  Note, identity need not be asserted for the necessary assurance
+to be met. Sometimes the RP only cares "is the person really *what* they say
+they are?". In the case of eduRoam, what the RP wants to know is "are we
+assured this person will comply with our network rules." In the case of
+federated access to licensed resources (e.g. on-line journals) it's "is this
+someone whose bill you will paid?".
 
 * Level of protection (LOP): The OP wants the website to protect the data.
 Most RP's will write data to their database. Using
@@ -44,8 +49,8 @@ of information explicitly or implicitly to the RP, most OP's expect a certain
 amount of diligence with regard to the handling of shared PII. The RP should
 adopt best practices for data security.
 
-* Level of control (LOC): The person wants to update, remove or otherwise direct the
-use of their data. Today people are demanding control of their data as a
+* Level of control (LOC): The person wants to update, remove or otherwise direct
+the use of their data. Today people are demanding control of their data as a
 human right. However, within an ecosystem, the concept of data ownership gets
 murky fast, as a person can't necessarily demand the removal for their personal
 information. For example, if an employee places an order, who's data is it? The
