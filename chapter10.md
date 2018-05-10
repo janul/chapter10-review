@@ -44,7 +44,7 @@ associated with old NIST 800-63 levels one to four. The current version of
 800-63 is updated to reflect a more nuanced view of the vectors of risk.
 800-63C contains NIST's digital identity guidelines for federation and
 assertions, and outlines many of the technical considerations for federation
-operators.
+operators. You can read it here https://pages.nist.gov/800-63-3/sp800-63c.html
 
 * Level of protection (LOP): The OP wants the website to protect the data.
 Most RP's will write data to their database. Using
@@ -80,7 +80,8 @@ types of authentication, the procedure for breach notifications, and
 obligations to update or remove a person's information upon their
 request. However, in a large ecosystem with many companies, requiring
 each pair of organizations to negotiate a bilateral agreement is not
-efficient. In fact, it should be the anti-pattern.
+efficient. In fact, trust derived from one-off agreements should be the
+anti-pattern.
 
 A better approach is to define one standard contract that level sets
 assurance, protection and control within the community. If each
@@ -574,6 +575,12 @@ is a java platform for hosting a single federation. Features:
 
 ## OTTO-Node / Fides
 
+This software, a part of the ERASMUS project, was funded in part by the United
+States Department of Homeland Security's Science and Technology Directorate.
+Standard disclaimer: The content of this book does not necessarily reflect the
+position or the policy of the U.S. Government and no official endorsement should
+be inferred.
+
 Fides is a web application that enables a person to register, then register an
 organization, and apply to become a member of the federation. It includes
 enrollment of an OpenID Provider, using the discovery features of OpenID
@@ -589,7 +596,10 @@ authorize an organization to issue certain types of badges.
 Fides also calls the OTTO API's--for example when a federation admin approves
 a new participant, Fides calls the OTTO federation endpoint to make the link.
 
-This software, a part of the ERASMUS project, has been funded in part by the United States Department of Homeland Security's Science and Technology Directorate. The content of this book does not necessarily reflect the position or the policy of the U.S. Government and no official endorsement should be inferred. All the code is transparent and free open source. Fides and OTTO Node code can be found in Gluu's github repository: https://github.com/GluuFederation/otto-node
+Fides and OTTO Node code can be found in Gluu's github repository:  https://github.com/GluuFederation/otto-node
 https://github.com/GluuFederation/erasmus/tree/master/FIDES
+
+More information about ERASMUS can be found at:
+https://kantarainitiative.org/trustoperations/kantara-identity-privacy-incubator/erasmus/
 
 ![Figure 10- : screenshot](./![Figure 10- : screenshot](./fides-federation.png))
