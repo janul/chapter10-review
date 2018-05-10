@@ -26,7 +26,7 @@ are equally important.
 
 Let's summarize for each vertex:
 
-* Level of Assurance: The RP (website) needs assurance from the OP.  Is the
+* Level of Assurance (LOA): The RP (website) needs assurance from the OP.  Is the
 person who is the subject of the assertion really who they say they are? How
 well did you identity proof this person? Did you check a state issued ID?
 Did you verify with the issuer that the ID was valid? How well did you
@@ -35,7 +35,7 @@ The OP provides assurance, and is some cases liability protection, to the RP.
 The assertion is only as good as the identity management and security practices
 behind it.  
 
-* Level of protection: The OP wants the website to protect the data.
+* Level of protection (LOP): The OP wants the website to protect the data.
 Most RP's will write data to their database. Using
 federated identity, RP's don't need the secret credentials (e.g. passwords),
 but it is common for RP's to create a local account for each person to track
@@ -44,7 +44,7 @@ of information explicitly or implicitly to the RP, most OP's expect a certain
 amount of diligence with regard to the handling of shared PII. The RP should
 adopt best practices for data security.
 
-* Level of control: The person wants to update, remove or otherwise direct the
+* Level of control (LOC): The person wants to update, remove or otherwise direct the
 use of their data. Today people are demanding control of their data as a
 human right. However, within an ecosystem, the concept of data ownership gets
 murky fast, as a person can't necessarily demand the removal for their personal
@@ -233,8 +233,7 @@ inter-federation, if one federation imports all the entities of another
 federation.
 
 For many SAML federations, publication of metadata is an automated process that
-happens every five minutes or so. In terms of operations, the SAML federation metadata can be published as a flat file. This makes global distribution of the document easier, as the federation or registration authority needs no runtime infrastructure other then a web server. The metadata aggregate can just be
-copied to multiple data centers, enabling more robust deployments.
+happens every five minutes or so. In terms of operations, the SAML federation metadata can be published as a flat file. This makes global distribution of the document easier, as the federation or registration authority needs no runtime infrastructure other then a web server. The metadata aggregate can just be copied to multiple data centers, enabling more robust deployments.
 
 In SAML, both IDP and SP entities are treated similarly in the metadata. Both
 are required to have a stable entityID, which is like a primary key--the
@@ -249,28 +248,95 @@ There are a few drawbacks of the metadata aggregate approach:
  and perhaps transforming them to meet your federation's metadata conventions can be onerous.
  * As a rule of thumb, size is limited to a few thousand entities.
 
+## Trustmarks
+
+Most of this content is thanks to the Georgia Tech Research Institute (GTRI)
+with the support of the National Strategy for Trusted Identities in Cyberspace
+(NSTIC) via the National Institute of Standards and Technology (NIST).  
+Standard disclaimer: "The views expressed do not necessarily reflect the
+official policies of NIST or NSTIC; nor does mention by trade names, commercial
+practices, or organizations imply endorsement by the U.S. Government."
+
+Trustmarks enable organizations to convey security risks in a machine readable
+format. A trustmark can be an assertion about anything! For example, technical
+interoperability (e.g. vocabularies and protocols), LOA / LOP / LOC
+considerations, or business. The legal aspects of trustmarks are conveyed not
+through the trustmarks themselves, but via the trustmark policies and/or
+trustmark agreements under which trustmarks are issued and used.
+
+This kind of federation is potentially more efficient then a centralized
+or "monolithic" federation.
+
+![Figure 10- : Potential Cost Savings from a Trustmark Framework](./cost_savings_for_trust_marks.jpg)
+
+The blue curve represents the growth of costs when establishing trust through
+a series of pairwise (bilateral) trust relationships. This curve is linear,
+because on average, each new pairwise relationship established requires roughly
+the same amount of time and effort as was required for each previously
+established relationship. This curve represents a worst-case scenario, and is an
+unacceptable strategy for any ecosystem that wishes to establish more than a
+trivial number of trust relationships with other organizations.
+
+The red curve represents the growth of costs when establishing trust through
+a series of traditional trust frameworks. The route of monolithic trust
+frameworks tends to imply joining multiple monolithic trust frameworks over time.
+The strategy of joining multiple monolithic trust frameworks does not scale as
+poorly as the bilateral trust strategy discussed above; however, it is still
+suboptimal. Since each new monolithic trust framework is opaque, it is unlikely
+that a significant amount of the prior work, which was performed during the
+process of joining previous monolithic trust frameworks, will be applicable
+when joining the next monolithic trust framework.
+
+The green curve represents the growth of costs when establishing trust through
+a componentized trustmark framework in which individual trust components tend
+to be reused between trust frameworks. In this scenario, joining a new trust
+framework requires three steps.
+
+* Determining which trustmarks are required by the new framework
+* Determining which required trustmarks are already possessed, and which need
+  to be acquired.
+* Acquiring the necessary trustmarks that are not already possessed
+
+Over time, as the organization seeks to join multiple componentized trust
+frameworks, it is increasingly likely to already possess many or most (or all)
+of the necessary trustmarks based on its previous efforts to join other trust
+frameworks. This causes the cost growth curve to become flat, or nearly flat,
+over time.
+
+This analysis illustrates one of the most important benefits of trustmarks: not
+only do trustmarks enable componentization and reuse of trust and
+interoperability criteria, but they also carry the potential for significant
+cost savings over time as the ecosystem grows to encompass many communities
+that engage in a variety of cross-COI collaboration scenarios.
+
+For more information on trust marks, including the trustmark XML specification,
+a database of existing security trustmarks (many!), and lots of great
+theoretical information, visit GTRI's trustmark page: https://trustmark.gtri.gatech.edu/
+
 ## OpenID federations
 
-OpenID presents a real challenge for federation. It starts with how
-entities are named. In SAML, both IDP's and SP's have an entityID, which is a
-convenient way to reference them in a federation's metadata. In OpenID Connect,
-it's a requirement that the OpenID Provider publishes it's metadata (although
-they don't call it that) on a URL--the .well-known/openid-configuration
-endpoint. This aligns very well with SAML--we can use that as the value to
-uniquely identify an OP in a federation.
+OpenID federations are moving in the direction as trustmarks toward a
+componentized trust model. However, OpenID presents some unique challenges.
+It starts with how entities are named. In SAML, both IDP's and SP's have an
+entityID, which is a convenient way to reference them in a federation's
+metadata. In OpenID Connect, it's a requirement that the OpenID Provider
+publishes it's metadata (although they don't call it that) on a URL--the .well-known/openid-configuration endpoint. This aligns very well with SAML--we
+can use that as the value to uniquely identify an OP in a federation.
 
 However, what is the entityID for an OpenID RP? During OpenID dynamic client
 registration, the OP issues a client_id. So the same client will have a
 different client_id at each OP. One could argue that the `redirect_uri` is a
 reasonable way to identify a client. However, you need to take into account
 that `redirect_uri`, may be multi-value, and the RP may update it, so it's not
-a great primary key. In OpenID Connect it would impossible to require an RP to publish its metadata--OpenID supports mobile clients, and Javascript clients
-that only exist as code in the person's browser. SAML doesn't have this problem because it was designed to solve trust with server-side web applications
+a great primary key. In OpenID Connect it would impossible to require an RP to
+publish its metadata--OpenID supports mobile clients, and Javascript clients
+that only exist as code in the person's browser. SAML doesn't have this problem
+because it was designed to solve trust with server-side web applications
 (excepting the ECP profile of SAML, which is esoteric.)
 
 These changes have required new ideas for the OpenID Connect federation
 specification, which does away with the idea of a federation aggregate, and
-replaces it with a more dynamic trust model.
+replaces it with a dynamic componentized trust model.
 
 The OpenID Provider keys used to sign and encrypt assertions are rotated every
 two days according to current best practices. That's a lot--SAML keys are
@@ -281,19 +347,20 @@ The public signing keys are stored by the client, and provide additional trust
 over TLS/SSL (after the key is retrieved). The  signing key is used to publish
 a verifiable OpenID discovery document.
 
-The specification makes no provision for what to do if the key needs to be rotated. You'd have to re-download it from the OP. But if an attacker has compromised the OP, when would be a good time to do that? Without the metadata aggregate, how would you know if the hacker or the organization re-published the signing key?
-
 The other innovation introduced by the OpenID Connect federation spec is the
 idea of metadata_statements, a kind of OAuth software statement, issued
 by the federation. The technical mechanics of how metadata_statements
 are created are somewhat complicated--it involves successive cryptographic
-operations. Remember, an OAuth software statement is not what it sounds like--it's actually a JSON document used by the client at registration like a registration token. The metadata statement would be created by the developer, and signed, then passed to the organization and signed, and then passed to the federation and signed. In practice, it's a little complex, but perhaps with adoption of this
-standard, the right tooling will evolve over time to make it easier.
+operations. Remember, an OAuth software statement is not what it sounds
+like--it's actually a JSON document used by the client at registration like
+a registration token. The metadata statement would be created by the developer,
+and signed, then passed to the organization and signed, and then passed to the
+federation and signed. In practice, it's a little complex, but perhaps with
+adoption of this standard, the right tooling will evolve over time to make it
+easier.
 
-The OpenID Connect federation specification is still a draft at the time of this book's publication. It lacks any adoption in existing federations. Also the
-features specified are implemented by few OpenID Providers. But whether or not
-it gains adoption, the OpenID federation spec has proposed a more scalable
-dynamic trust model that does add trust over SSL/TLS, and moves forward the discussion for the design of the next generation federation stack.
+The OpenID Connect federation specification is still a draft at the time of
+this book's publication. Software implementations are experimental.
 
 ## OTTO Federation
 
@@ -305,9 +372,16 @@ current federations, and only one very early software implementation of the
 API's.
 
 OTTO addresses some of the weaknesses of existing SAML federations. The OTTO
-API's standardize operation by the registration authority. How does a participant join a federation? How to register or update an entity? How to leave a federation?
+API's standardize operation by the registration authority. How does a
+participant join a federation? How to register or update an entity? How to
+leave a federation?
 
-OTTO API's provide a standard way to do these things. In SAML, federation operators either wrote their own operational software, or used open source software to manage federation data. Some federations offer participants no automated interface--registration and updates happen via a manual process. If federations become more common, consistency would offer more efficiency to participants and operators alike.
+OTTO API's provide a standard way to do these things. In SAML, federation
+operators either wrote their own operational software, or used open source
+software to manage federation data. Some federations offer participants no
+automated interface--registration and updates happen via a manual process.
+If federations become more common, consistency would offer more efficiency
+to participants and operators alike.
 
 OTTO APIs provide a query mechanism to obtain information from the federation.
 While this comes at additional operational complexity--the federation operator
@@ -335,7 +409,8 @@ specific) vocabularies.
 
 ### OTTO API
 
-The registration authority hosts the OTTO API, which consists of a number of service endpoints.
+The registration authority hosts the OTTO API, which consists of a number of
+service endpoints.
 
 * *Configuration endpoint* : Returns a json document describing the federation
 services of the registration authority--basically the URLs of all the endpoints
@@ -421,9 +496,9 @@ Participant contact information can also be published here.
 * **Entity** - Subclass of schema.org/Thing.  A technical service of a participant.
 The `operates` property indicates the resource. The `operatedBy` and  
 `federatedBy` properties specify the organization and federation links. The
-`supports` property can be used to describe schema requirements. The `category`
-property can be used by the federation to group Entities to faciliate trust
-management (e.g. R&S websites).
+`supports` property can be used to describe schema requirements, or to
+publish trustmarks. The `category`property can be used by the federation to
+group Entities to faciliate trust management (e.g. R&S websites).
 * **Federation** - Subclass of schema.org/Organization. The `member` and
  `federates` property links participants and entities respectively. The
  `metadata` property specifies the federation's public keys, certificates
@@ -431,8 +506,8 @@ management (e.g. R&S websites).
  assertions, and encrypted communication. The `sponsor` property specifies
  the Organization responsible for governance. Federation contact information
  and legal agreements can be listed. The federation can use the `supports`
- property to publish schema standards, like user claim `identifi`ers (e.g.
- givenName or first_name?).
+ property to publish schema standards, like user claim identifiers (e.g.
+ givenName or first_name?), and trustmarks (as mentioned in the section above).
 * **Metadata** - Subclass of schema.org/Thing. This class specifies its
 `metadataFormat`, `expiration` and `category` (e.g. OpenID or SAML).
 OTTO extension vocabularies (like OpenID and SAML) subclass metadata,
