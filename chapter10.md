@@ -547,9 +547,16 @@ Developed by HEAnet to manage the Edugate multiparty SAML federation.
 in Ireland, Jagger is an easy to deploy and operate federation management
 platform that provides a website for participant administrators to join and
 update a federation, and for federation administrators to approve and publish
-SAML metadata. One of the nice features is that it supports the management of multiple federations, making it an excellent choice for a registration authority. The following figures show some of the screen shots from Jagger's website, which you can find at https://jagger.heanet.com
-
+SAML metadata.
+One of the nice features is that it supports the management of multiple federations,
+making it an excellent choice for a registration authority.
+It also create a single circle of trust containing metadata of all trusted entities
+via multiple federations. The following figures show some of the screen shots
+from Jagger's website, which you can find at https://jagger.heanet.ie
+![Figure 10- : screenshot](./jagger-fedlist.png)
 ![Figure 10- : screenshot](./jagger-idp-list.png)
+![Figure 10- : screenshot](./jagger-idp-membership.png)
+
 
 ## Federation Registry
 
